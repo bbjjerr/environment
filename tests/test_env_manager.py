@@ -19,7 +19,7 @@ class TestEnvironmentManager:
         """Test getting a missing variable without default."""
         assert EnvironmentManager.get("NON_EXISTENT_VAR") is None
 
-    def test_set(self, monkeypatch):
+    def test_set(self):
         """Test setting an environment variable."""
         EnvironmentManager.set("TEST_SET_VAR", "new_value")
         assert EnvironmentManager.get("TEST_SET_VAR") == "new_value"

@@ -69,5 +69,7 @@ class EnvironmentManager:
                      only set variables that don't already exist.
         """
         for key, value in env_dict.items():
+            if not isinstance(value, str):
+                value = str(value)
             if override or key not in os.environ:
                 os.environ[key] = value

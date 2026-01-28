@@ -20,7 +20,7 @@ class Config:
             config_dict: Optional dictionary of configuration values.
                         If None, an empty configuration is created.
         """
-        self._config = config_dict or {}
+        self._config = config_dict.copy() if config_dict else {}
 
     def get(self, key: str, default: Any = None) -> Any:
         """
