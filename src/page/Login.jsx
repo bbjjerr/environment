@@ -1,8 +1,10 @@
 const Login = () => {
   return (
-    <div>
-      <h1>登录页</h1>
-    </div>
+    <>
+      <div className="title">
+        <Form />
+      </div>
+    </>
   );
 };
 export default Login;

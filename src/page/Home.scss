@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(243, 244, 246);
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+
+.tpo1 {
+  width: 1800px;
+  margin: 30px auto 0 auto;
+  background-color: rgb(255, 255, 255);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.05),
+    /* 核心扩散层 */ 0 20px 60px rgba(0, 0, 0, 0.03); /* 远景投影层 */
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  .left {
+    width: 400px;
+    height: 900px;
+    background-color: rgb(255, 255, 255);
+    border-right: 1px solid #cfc9c9;
+    float: left;
+  }
+  .middle {
+    height: 900px;
+    width: 1100px;
+    background-color: rgb(246, 248, 251);
+    float: left;
+    border: 1px solid #000;
+  }
+  .right {
+    width: 300px;
+    height: 900px;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid #000;
+  }
+}

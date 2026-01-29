@@ -4,23 +4,21 @@ const commentStore = createSlice({
   name: "comment",
   // 初始状态
   initialState: {
-    list: [{ id: 1, name: "张三", dsc: "Redux 里的数据" }],
+    list: [],
   },
   // 修改状态的方法
   reducers: {
-    setList(state, action) {
-      state.list = action.payload;
-    },
     addComment(state, action) {
       state.list.push(action.payload);
+      console.log("添加了评论：", action.payload);
     },
-    removeComment(state, action) {
-      state.list = state.list.filter((item) => item.id !== action.payload);
+    cleatComment(state) {
+      state.list = [];
     },
   },
 });
 
 // 导出 action 函数，供组件调用
-export const { setList, addComment, removeComment } = commentStore.actions;
+export const { addComment, cleatComment } = commentStore.actions;
 // 导出 reducer，供创建 store 使用
 export default commentStore.reducer;
