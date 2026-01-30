@@ -32,19 +32,30 @@ a {
     float: left;
   }
   .middle {
-    height: 900px;
-    width: 1100px;
+    height: 100%;
+    // 占据剩下的空间
+    width: calc(100% - 400px);
+    position: absolute;
+    top: 0;
+    left: 400px;
     background-color: rgb(246, 248, 251);
-    float: left;
-    border: 1px solid #000;
   }
+
   .right {
     width: 300px;
     height: 900px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(246, 248, 251);
     position: absolute;
     top: 0;
-    right: 0;
-    border: 1px solid #000;
+    right: -301px;
+  }
+  .right::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgb(217, 216, 216);
+    width: 1px;
+    height: 900px;
   }
 }

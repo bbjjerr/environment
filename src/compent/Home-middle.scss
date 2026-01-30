@@ -1,0 +1,186 @@
+.title {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.middle-chat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // 防止子元素溢出
+}
+
+.headerImg {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  .ImgSie {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .textMessage {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .countMessage {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+}
+
+.top2 {
+  width: 100%;
+  flex: 1; // 自动填充剩余空间
+  min-height: 300px; // 确保聊天区域最小可见高度
+  box-sizing: border-box;
+  overflow-y: auto; //滚动条,当内容溢出时显示
+
+  padding-bottom: 20px;
+  background-color: rgb(246, 248, 251);
+}
+
+.top2 .message {
+  width: 100%;
+  background-color: rgb(246, 248, 251);
+  border-radius: 12px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  cursor: pointer;
+
+  position: relative;
+}
+
+.top2 .message .my {
+  display: flex;
+  //右对齐
+  justify-content: flex-end;
+
+
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .myMessage {
+    max-width: 400px;
+    background-color: #95e484;
+    border-radius: 12px;
+    padding: 10px 20px;
+    box-shadow: 0 0 4px 6px #95e484;
+    box-sizing: border-box;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+  }
+
+  .time {
+    position: absolute;
+    bottom: 0;
+    right: 60px;
+    font-size: 12px;
+    color: #999;
+  }
+}
+
+.top2 .message .other {
+  display: flex;
+  justify-content: flex-start;
+
+
+  .otherImg {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+  }
+
+  .otherMessage {
+    max-width: 400px;
+    background-color: #95e484;
+    box-shadow: 0 0 4px 6px #95e484;
+    border-radius: 12px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+
+
+  .time {
+    position: absolute;
+    bottom: -20px;
+    right: 5px;
+    font-size: 12px;
+    color: #999;
+  }
+
+}
+
+.bottom {
+  width: 100%;
+  flex-shrink: 0; // 防止被压缩
+  max-height: 220px; // 限制最大高度
+  box-sizing: border-box;
+  padding: 10px;
+  padding-left: 100px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden; // 防止内部元素溢出
+  box-shadow: 2px 0 2px 2px #c2c4c2;
+
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+
+  .send {
+    width: 100%;
+    border-radius: 12px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+
+
+    .sendInput {
+      width: 60%;
+      box-sizing: border-box;
+      padding: 10px 20px;
+      box-shadow: 0 0 2px 2px #c2c4c2;
+
+      border-radius: 12px;
+      border: none
+    }
+  }
+}

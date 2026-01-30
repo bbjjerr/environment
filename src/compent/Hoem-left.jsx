@@ -19,14 +19,44 @@ const HomeLeft = () => {
       time: "10:30",
       url: "https://i.pravatar.cc/150?img=2",
       theContentOfTheChat: [
-        { time: "9:20", message: "你好", sender: "Sarah Wilson" },
-        { time: "9:21", message: "这是新的项目需求", sender: "Sarah Wilson" },
-        { time: "9:30", message: "那你觉得呢", sender: "Sarah Wilson" },
+        { time: "9:20", message: "你好", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
+        { time: "9:21", message: "这是新的项目需求", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
+        { time: "9:30", message: "那你觉得呢", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
 
         {
           time: "10:30",
-          message: "好的我整理完尽快的发给你",
+          message: ",好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你",
           sender: "Alex Chen",
+          url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop",
+        },
+        {
+          time: "10:33",
+          message: "发给你了",
+          sender: "Alex Chen",
+          url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop",
+        },
+        {
+          time: "10:36",
+          message: "收到",
+          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+        },
+        {
+          time: "10:36",
+          message: "收到",
+          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+        },
+        {
+          time: "10:36",
+          message: "收到",
+          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+        }, {
+          time: "10:36",
+          message: "收到",
+          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+        }, {
+          time: "10:36",
+          message: "收到",
+          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
         },
       ],
     },

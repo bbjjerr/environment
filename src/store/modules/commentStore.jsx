@@ -9,7 +9,7 @@ const commentStore = createSlice({
   // 修改状态的方法
   reducers: {
     addComment(state, action) {
-      state.list.push(action.payload);
+      state.list = action.payload;
       console.log("添加了评论：", action.payload);
     },
     cleatComment(state) {
