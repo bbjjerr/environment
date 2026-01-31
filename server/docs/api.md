@@ -63,7 +63,7 @@
     "status": "online"
   },
   "token": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "dGhpcyBpcyBhIHJlZnJlc2..."
+  "refreshToken": "dGhpcyBpcyBhIHJlZnJlc2..." //
 }
 ```
 
@@ -90,15 +90,15 @@
 
 ```json
 {
-  "_id": "507f1f77bcf86cd799439011",
-  "name": "Alex Chen",
-  "email": "alex@example.com",
-  "avatarUrl": "https://example.com/avatar.jpg",
-  "title": "Frontend Developer",
-  "status": "online",
+  "_id": "507f1f77bcf86cd799439011", //身份的唯一id
+  "name": "Alex Chen", //名字
+  "email": "alex@example.com", //邮箱
+  "avatarUrl": "", //头像
+  "title": "Frontend Developer", //职业
+  "status": "online", //在线的状态
   "settings": {
-    "muteNotifications": false,
-    "privacyBlocked": []
+    "muteNotifications": false, //消息是否免打扰
+    "privacyBlocked": [] //这是隐私的黑名单
   }
 }
 ```

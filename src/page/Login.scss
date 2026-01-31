@@ -392,3 +392,15 @@
     }
   }
 }
+.get-code {
+  width: 120px;
+  height: 40px;
+  background-color: #1890ff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.get-code:active {
+  background-color: #145fa5;
+}

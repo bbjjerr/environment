@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron:dev": "electron ."
+    "pc": "electron ."
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",

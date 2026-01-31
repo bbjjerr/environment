@@ -1,15 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.scss";
+import axios from "axios";
 import { login, register } from "../api/login";
 const Login = () => {
   const navigate = useNavigate();
+  //用来获取邮箱的验证
+  const BASE_URL = "https://api.bbjjerr.cloud/";
+  const handleGetCode = async () => {
+    if (!formData.email) {
+      setError("请先输入邮箱");
+      return;
+    }
+
+    try {
+      const res = await axios.post(BASE_URL, {
+        action: "send",
+        email: formData.email,
+      });
+      console.log("验证码请求响应:", res.data);
+
+      // 检查服务器返回的结果
+      if (res.data?.success) {
+        alert(res.data.msg || "验证码已发送");
+      } else {
+        // 显示服务器返回的错误信息（包括 60 秒等待提示）
+        setError(res.data?.msg || "验证码发送失败");
+      }
+    } catch (error) {
+      console.error("验证码发送失败:", error);
+      setError("验证码发送失败，请重试");
+    }
+  };
+  const [code, setCode] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,62 +50,94 @@ const Login = () => {
     }));
     setError(""); // 清除错误信息
   };
+  // 校验验证码
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // 表单验证
+    // 1. 基础表单验证
+    if (!code) {
+      setError("请输入验证码");
+      return;
+    }
     if (!formData.email || !formData.password) {
       setError("请填写所有必填字段");
       return;
     }
-
-    if (!isLogin) {
-      if (!formData.username) {
-        setError("请填写用户名");
-        return;
-      }
-      if (formData.password !== formData.confirmPassword) {
-        setError("两次输入的密码不一致");
-        return;
-      }
-      if (formData.password.length < 6) {
-        setError("密码长度至少为6位");
-        return;
-      }
+    if (!isLogin && !formData.username) {
+      setError("请填写用户名");
+      return;
+    }
+    if (!isLogin && formData.password.length < 6) {
+      setError("密码长度至少为6位");
+      return;
     }
 
     setIsLoading(true);
-    const { username, email, password } = formData;
 
     try {
+      // 2. 第一步：验证码校验
+      console.log("开始验证码校验...", { email: formData.email, code });
+      const verifyRes = await axios.post(BASE_URL, {
+        action: "verify",
+        email: formData.email,
+        code: code,
+      });
+      console.log("验证码校验响应:", verifyRes.data);
+
+      // 检查验证码是否正确
+      if (!verifyRes.data?.success) {
+        setError(verifyRes.data?.msg || "验证码错误");
+        setIsLoading(false);
+        return; // 验证码错误，直接返回，不执行后续登录/注册
+      }
+
+      console.log("✅ 验证码校验通过，开始执行登录/注册...");
+
+      // 3. 第二步：验证码通过后执行登录或注册
+      const { username, email, password } = formData;
+
       if (isLogin) {
         // 登录
+        console.log("执行登录请求...", { email });
         const res = await login({ email, password });
-        console.log("登录成功:", res);
-        // 保存 token
-        if (res.token) {
-          localStorage.setItem("token_key", res.token);
+        console.log("登录响应:", res);
+
+        const token = res?.token;
+        if (token) {
+          localStorage.setItem("token_key", token);
+          console.log("✅ Token 已保存，准备跳转...");
+          navigate("/");
+        } else {
+          setError("登录失败：服务器未返回有效凭证");
         }
-        navigate("/");
       } else {
         // 注册
-        const res = await register({ name: username, email, password });
-        console.log("注册成功:", res);
-        // 注册成功后切换到登录
+        console.log("执行注册请求...", { name: username, email });
+        await register({ name: username, email, password });
+        console.log("✅ 注册成功");
         setIsLogin(true);
-        setFormData({
-          username: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
+        setFormData({ username: "", email: "", password: "" });
+        setCode("");
         alert("注册成功，请登录");
       }
     } catch (error) {
-      console.error("请求失败:", error);
-      setError(error.response?.data?.message || "请求失败，请重试");
+      console.error("❌ 操作失败:", error);
+      console.log("错误响应数据:", error.response?.data);
+
+      // 优先使用后端返回的错误信息
+      let msg = "请求失败，请重试";
+      if (error.response?.data?.message) {
+        msg = error.response.data.message;
+      } else if (error.response?.data?.msg) {
+        msg = error.response.data.msg;
+      } else if (error.response?.status === 401) {
+        msg = "邮箱或密码错误";
+      } else if (error.response?.status === 409) {
+        msg = "该邮箱已被注册";
+      }
+      setError(msg);
     } finally {
       setIsLoading(false);
     }
@@ -150,7 +210,6 @@ const Login = () => {
                 />
               </div>
             )}
-
             <div className="form-group">
               <label htmlFor="email">邮箱</label>
               <input
@@ -162,7 +221,6 @@ const Login = () => {
                 onChange={handleInputChange}
               />
             </div>
-
             <div className="form-group">
               <label htmlFor="password">密码</label>
               <input
@@ -175,20 +233,30 @@ const Login = () => {
               />
             </div>
 
-            {!isLogin && (
-              <div className="form-group">
-                <label htmlFor="confirmPassword">确认密码</label>
+            {/*在这里获取验证码 */}
+            <div className="form-group">
+              <label htmlFor="code">验证码</label>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="请再次输入密码"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
+                  type="text"
+                  id="code"
+                  name="code"
+                  placeholder="请输入验证码"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  style={{ marginRight: "10px" }}
                 />
+                <button className="get-code" onClick={handleGetCode} style={{}}>
+                  获取验证码
+                </button>
               </div>
-            )}
-
+            </div>
             {isLogin && (
               <div className="form-options">
                 <label className="remember-me">
@@ -200,7 +268,6 @@ const Login = () => {
                 </a>
               </div>
             )}
-
             <button
               type="submit"
               className={`submit-btn ${isLoading ? "loading" : ""}`}
