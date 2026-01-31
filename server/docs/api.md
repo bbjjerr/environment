@@ -268,11 +268,11 @@
 ```json
 {
   "body": "太好了！我也觉得 Indigo 那个色系很适合。",
-  "attachments": ["asset_001"],
+  "attachments": ["asset_001"], //附件
   "richContent": {
-    "type": "image",
-    "url": "https://example.com/image.png",
-    "meta": { "width": 800, "height": 600 }
+    "type": "image", //类型
+    "url": "https://example.com/image.png", //图片地址
+    "meta": { "width": 800, "height": 600 } //图片信息
   }
 }
 ```

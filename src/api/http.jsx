@@ -2,7 +2,7 @@ import axios from "axios";
 import { message } from "antd"; // 假设使用 antd 提示
 
 const http = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "http://localhost:4000/api/v1",
   timeout: 5000,
 });
 

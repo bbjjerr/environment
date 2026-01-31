@@ -15,17 +15,33 @@ const HomeLeft = () => {
     {
       id: 1,
       name: "Sarah Wilson",
-      message: "是这样子的",
+
       time: "10:30",
       url: "https://i.pravatar.cc/150?img=2",
       theContentOfTheChat: [
-        { time: "9:20", message: "你好", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
-        { time: "9:21", message: "这是新的项目需求", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
-        { time: "9:30", message: "那你觉得呢", sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2" },
+        {
+          time: "9:20",
+          message: "你好",
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
+        },
+        {
+          time: "9:21",
+          message: "这是新的项目需求",
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
+        },
+        {
+          time: "9:30",
+          message: "那你觉得呢",
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
+        },
 
         {
           time: "10:30",
-          message: ",好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你",
+          message:
+            ",好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你好的我整理完尽快的发给你",
           sender: "Alex Chen",
           url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop",
         },
@@ -38,41 +54,55 @@ const HomeLeft = () => {
         {
           time: "10:36",
           message: "收到",
-          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
         },
         {
           time: "10:36",
           message: "收到",
-          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
         },
         {
           time: "10:36",
           message: "收到",
-          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
-        }, {
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
+        },
+        {
           time: "10:36",
           message: "收到",
-          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
-        }, {
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
+        },
+        {
           time: "10:36",
           message: "收到",
-          sender: "Sarah Wilson", url: "https://i.pravatar.cc/150?img=2"
+          sender: "Sarah Wilson",
+          url: "https://i.pravatar.cc/150?img=2",
         },
       ],
     },
     {
       id: 2,
       name: "Jack season",
-      message: "是你的问题吧",
       time: "10:30",
       url: "https://i.pravatar.cc/150?img=4",
+      theContentOfTheChat: [
+        {
+          time: "10:36",
+          message: "你好",
+          sender: "Alex Chen",
+          url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop4",
+        },
+      ],
     },
     {
       id: 3,
       name: "Mary hash",
-      message: "是这样子的",
       time: "10:30",
       url: "https://i.pravatar.cc/150?img=8",
+      theContentOfTheChat: [],
     },
   ];
   const [messagePeople, setMessagePeople] = useState(Allpeople);
@@ -136,7 +166,19 @@ const HomeLeft = () => {
               <img src={item.url} alt="" />
               <p>
                 {item.name}
-                <span>{item.message}</span>
+                <span>
+                  {/* 如果是空消息就不展示任何的信息 */}
+                  {item.theContentOfTheChat?.length > 0
+                    ? (item.theContentOfTheChat[
+                        item.theContentOfTheChat.length - 1
+                      ].sender === item.name
+                        ? "他："
+                        : "我：") +
+                      (item.theContentOfTheChat[
+                        item.theContentOfTheChat.length - 1
+                      ].message || "")
+                    : ""}
+                </span>
               </p>
               <p className="time">{item.time}</p>
             </div>

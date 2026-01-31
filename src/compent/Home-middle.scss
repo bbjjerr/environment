@@ -79,7 +79,7 @@
 
 .middle-chat {
   width: 100%;
-  height: 100%;
+  height: 900px; // 与父容器 .middle 高度一致，确保 flex 布局正确计算
   display: flex;
   flex-direction: column;
   overflow: hidden; // 防止子元素溢出
@@ -123,12 +123,31 @@
 .top2 {
   width: 100%;
   flex: 1; // 自动填充剩余空间
-  min-height: 300px; // 确保聊天区域最小可见高度
+  min-height: 0; // 允许 flex 子项正常收缩，确保滚动条能够显示
   box-sizing: border-box;
-  overflow-y: auto; //滚动条,当内容溢出时显示
+  overflow-y: scroll; // 改为 scroll，始终显示滚动轨道
 
   padding-bottom: 20px;
   background-color: rgb(246, 248, 251);
+
+  // 自定义滚动条样式（WebKit 浏览器：Chrome、Safari、Edge）
+  &::-webkit-scrollbar {
+    width: 8px; // 滚动条宽度
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); // 滚动轨道背景
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2); // 滚动条滑块颜色
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.35); // 悬停时颜色加深
+    }
+  }
 }
 
 .top2 .message {
