@@ -10,7 +10,6 @@
   background: linear-gradient(135deg, #b4b6b7 0%, #e9ecef 50%, #b8c0c9 100%);
 
   // 装饰圆圈
-
   &::before,
   &::after {
     content: "";
@@ -38,7 +37,7 @@
   p {
     position: relative;
     z-index: 1;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 500;
     color: #555;
     padding: 24px 48px;
@@ -79,10 +78,10 @@
 
 .middle-chat {
   width: 100%;
-  height: 900px; // 与父容器 .middle 高度一致，确保 flex 布局正确计算
+  height: 100%; // 自适应父容器高度
   display: flex;
   flex-direction: column;
-  overflow: hidden; // 防止子元素溢出
+  overflow: hidden;
 }
 
 .headerImg {
@@ -91,6 +90,7 @@
   padding: 10px 20px;
   position: relative;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; // 防止被压缩
 
   .ImgSie {
     display: inline-block;
@@ -120,32 +120,38 @@
   }
 }
 
+// Watermark 容器样式
+.watermark-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
 .top2 {
   width: 100%;
-  flex: 1; // 自动填充剩余空间
-  min-height: 0; // 允许 flex 子项正常收缩，确保滚动条能够显示
+  height: 100%;
   box-sizing: border-box;
-  overflow-y: scroll; // 改为 scroll，始终显示滚动轨道
-
+  overflow-y: auto;
   padding-bottom: 20px;
   background-color: rgb(246, 248, 251);
 
-  // 自定义滚动条样式（WebKit 浏览器：Chrome、Safari、Edge）
+  // 自定义滚动条样式
   &::-webkit-scrollbar {
-    width: 8px; // 滚动条宽度
+    width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05); // 滚动轨道背景
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2); // 滚动条滑块颜色
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.35); // 悬停时颜色加深
+      background: rgba(0, 0, 0, 0.35);
     }
   }
 }
@@ -157,13 +163,11 @@
   box-sizing: border-box;
   padding: 10px 20px;
   cursor: pointer;
-
   position: relative;
 }
 
 .top2 .message .my {
   display: flex;
-  //右对齐
   justify-content: flex-end;
 
   img {
@@ -173,7 +177,7 @@
   }
 
   .myMessage {
-    max-width: 400px;
+    max-width: 60%; // 使用百分比限制最大宽度
     background-color: #95e484;
     border-radius: 12px;
     padding: 10px 20px;
@@ -181,6 +185,7 @@
     box-sizing: border-box;
     margin-right: 10px;
     margin-bottom: 10px;
+    word-wrap: break-word;
   }
 
   .time {
@@ -203,7 +208,7 @@
   }
 
   .otherMessage {
-    max-width: 400px;
+    max-width: 60%; // 使用百分比限制最大宽度
     background-color: #95e484;
     box-shadow: 0 0 4px 6px #95e484;
     border-radius: 12px;
@@ -212,6 +217,7 @@
     margin-left: 10px;
     margin-bottom: 10px;
     position: relative;
+    word-wrap: break-word;
   }
 
   .time {
@@ -225,8 +231,8 @@
 
 .bottom {
   width: 100%;
-  flex-shrink: 0; // 防止被压缩
-  max-height: 220px; // 限制最大高度
+  flex-shrink: 0;
+  max-height: 220px;
   box-sizing: border-box;
   padding: 10px;
   padding-left: 100px;
@@ -235,7 +241,7 @@
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  overflow: hidden; // 防止内部元素溢出
+  overflow: hidden;
   box-shadow: 2px 0 2px 2px #c2c4c2;
 
   img {
@@ -245,18 +251,17 @@
   }
 
   .send {
-    width: 100%;
+    flex: 1; // 占据剩余空间
     border-radius: 12px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 
     .sendInput {
-      width: 60%;
+      width: 80%; // 使用百分比
       box-sizing: border-box;
       padding: 10px 20px;
       box-shadow: 0 0 2px 2px #c2c4c2;
-
       border-radius: 12px;
       border: none;
     }

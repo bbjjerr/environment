@@ -93,7 +93,7 @@ const HomeLeft = () => {
           time: "10:36",
           message: "你好",
           sender: "Alex Chen",
-          url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop4",
+          url: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop",
         },
       ],
     },

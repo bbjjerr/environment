@@ -12,15 +12,22 @@ li {
   list-style: none;
 }
 
+// 左侧栏容器 - 使用 flex 布局
+.leftH {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .header {
   box-sizing: border-box;
   padding: 10px 20px;
-
   height: 100px;
   border-bottom: 1px solid #cfc9c9;
-
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 
   .ImgURL {
     display: inline-block;
@@ -51,7 +58,7 @@ li {
   }
 
   p {
-    width: 300px;
+    width: 200px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -91,6 +98,7 @@ li {
   padding: 10px 20px;
   box-sizing: border-box;
   background-color: rgb(255, 255, 255);
+  flex-shrink: 0;
 
   input {
     background-image: url(../img/搜索.png);
@@ -101,7 +109,7 @@ li {
     height: 40px;
     border-radius: 12px;
     padding-left: 40px;
-    font-size: 16px;
+    font-size: 1rem;
     border: none;
     background-color: rgb(241, 245, 249);
   }
@@ -113,16 +121,14 @@ li {
 
 .ulLI {
   width: 100%;
-
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .ulLI li {
   display: inline-block;
-  width: 80px;
+  width: 70px;
   height: 80px;
-  //   box-shadow: 0px 0px 4px 6px rgba(0, 0, 0, 0.1);
-  //   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   margin-left: 15px;
   text-align: center;
@@ -154,11 +160,10 @@ li {
 
 .hint {
   width: 100%;
-
   box-sizing: border-box;
   padding: 10px 20px;
-
   color: gray;
+  flex-shrink: 0;
 
   .hint-left {
     float: left;
@@ -175,10 +180,30 @@ li {
   clear: both;
 }
 
+// 聊天列表 - 使用 flex: 1 填充剩余空间
 .chatinformation {
   width: 100%;
-  height: 500px;
+  flex: 1; // 占据剩余空间
+  min-height: 0; // 允许正常收缩
   overflow-y: auto;
+
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
 
   .informationDetails {
     width: 100%;
@@ -210,7 +235,6 @@ li {
 
     .time {
       font-size: 12px;
-
       float: right;
       margin-top: 30px;
       margin-right: 10px;
@@ -218,7 +242,6 @@ li {
   }
 
   .informationDetails:hover {
-    //用户悬停聊天信息，颜色变换
     background-color: rgb(79, 69, 229);
     color: aliceblue;
   }
@@ -231,12 +254,12 @@ li {
   margin-right: 30px;
   padding: 10px 0;
   margin-top: 10px;
+  flex-shrink: 0;
 
   img {
     width: 30px;
     height: 30px;
     display: block;
-
     margin-left: 10px;
   }
 

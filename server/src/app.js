@@ -7,14 +7,17 @@ const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// CORS 配置
+// CORS 配置 - 允许所有本地开发端口
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5177",
-      "http://localhost:3000",
-    ],
+    origin: (origin, callback) => {
+      // 允许无 origin（如 Postman）或所有 localhost 端口
+      if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );

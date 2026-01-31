@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.scss";
-import { login } from "../api/login";
+import { login, register } from "../api/login";
 const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
@@ -57,8 +57,8 @@ const Login = () => {
         const res = await login({ email, password });
         console.log("登录成功:", res);
         // 保存 token
-        if (res.data?.token) {
-          localStorage.setItem("token", res.data.token);
+        if (res.token) {
+          localStorage.setItem("token_key", res.token);
         }
         navigate("/");
       } else {

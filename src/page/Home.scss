@@ -1,61 +1,81 @@
+// 响应式根字体大小 - 根据视口宽度缩放
+html {
+  // 最小 14px，最大 18px，根据视口宽度动态调整
+  font-size: clamp(14px, 1vw + 10px, 18px);
+}
+
 body {
   margin: 0;
   padding: 0;
   background-color: rgb(243, 244, 246);
+  overflow: hidden;
+  font-size: 1rem; // 使用 rem 单位
+  line-height: 1.5;
 }
+
 p {
   margin: 0;
   padding: 0;
 }
+
 ul {
   list-style: none;
 }
+
 a {
   text-decoration: none;
 }
 
+// 响应式布局 - 使用 flexbox 实现三栏布局
 .tpo1 {
-  width: 1800px;
+  width: 100%;
+  max-width: 1800px;
+  height: calc(100vh - 60px);
+  min-height: 640px;
   margin: 30px auto 0 auto;
   background-color: rgb(255, 255, 255);
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.05),
-    /* 核心扩散层 */ 0 20px 60px rgba(0, 0, 0, 0.03); /* 远景投影层 */
+    0 20px 60px rgba(0, 0, 0, 0.03);
   border-radius: 30px;
   overflow: hidden;
   position: relative;
+  display: flex;
+
   .left {
-    width: 400px;
-    height: 900px;
+    width: 350px;
+    min-width: 300px;
+    max-width: 400px;
+    height: 100%;
     background-color: rgb(255, 255, 255);
     border-right: 1px solid #cfc9c9;
-    float: left;
-  }
-  .middle {
-    height: 100%;
-    // 占据剩下的空间
-    width: calc(100% - 400px);
-    position: absolute;
-    top: 0;
-    left: 400px;
-    background-color: rgb(246, 248, 251);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
   }
 
-  .right {
-    width: 300px;
-    height: 900px;
+  .middle {
+    flex: 1;
+    height: 100%;
+    min-width: 400px;
     background-color: rgb(246, 248, 251);
-    position: absolute;
-    top: 0;
-    right: -301px;
+    position: relative;
+    transition: all 0.3s ease;
   }
-  .right::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: rgb(217, 216, 216);
-    width: 1px;
-    height: 900px;
+
+  // 右侧面板 - 使用 flex 布局，不再用 absolute
+  .right {
+    width: 0; // 默认隐藏
+    height: 100%;
+    background-color: #fff;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    border-left: 1px solid rgb(217, 216, 216);
+
+    // 展开状态
+    &.open {
+      width: 300px;
+    }
   }
 }

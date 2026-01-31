@@ -91,8 +91,12 @@ const HomeMiddle = ({ changeMiddle }) => {
         />
       </div>
 
-      <div className="top2">
-        <Watermark content={["公司内部聊天，禁止外传"]} gap={[50, 50]}>
+      <Watermark
+        content={["公司内部聊天，禁止外传"]}
+        gap={[50, 50]}
+        className="watermark-container"
+      >
+        <div className="top2">
           {MessageShadow.map((item) => (
             <div key={item.id} className="message">
               {item.sender == "Alex Chen" ? (
@@ -117,8 +121,8 @@ const HomeMiddle = ({ changeMiddle }) => {
             </div>
           ))}
           <div ref={messagesEndRef} />
-        </Watermark>
-      </div>
+        </div>
+      </Watermark>
 
       <div className="bottom">
         {/* <input type="text" placeholder="输入消息" ><img src={send} alt="" /></input> */}
