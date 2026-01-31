@@ -6,6 +6,7 @@ import { useMemo, useRef, useEffect } from "react";
 import send from "../img/_图片.png";
 import emoji from "../img/表情.png";
 import add from "../img/文件.png";
+import { Watermark } from 'antd';
 
 const HomeMiddle = ({ changeMiddle }) => {
   const chatList = useSelector((state) => state.comment.list);
@@ -88,7 +89,9 @@ const HomeMiddle = ({ changeMiddle }) => {
 
 
   return (
+
     <div className="middle-chat">
+
       <div className="headerImg">
         <img className="ImgSie" src={chatList.url} alt="" />
         <p className="textMessage">{chatList.name}</p>
@@ -100,36 +103,41 @@ const HomeMiddle = ({ changeMiddle }) => {
           alt=""
         />
       </div>
+
       <div className="top2" >
-        {MessageShadow.map((item) => (
-          <div key={item.id} className="message">
-            {item.sender == "Alex Chen" ? (
-              <>
-                <div className="my">
-                  <p className="myMessage">{item.message}</p>
-                  <img className="myImg" src={item.url} alt="" />
-                  <p className="time">{item.time}</p>
-
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="other">
-                  <img className="otherImg" src={item.url} alt="" />
-                  <div className="otherMessage">
-                    <p>{item.message}</p>
+        <Watermark content={['公司内部聊天，禁止外传']} gap={[50, 50]} style={{ height: '100%' }}>
+          {MessageShadow.map((item) => (
+            <div key={item.id} className="message">
+              {item.sender == "Alex Chen" ? (
+                <>
+                  <div className="my">
+                    <p className="myMessage">{item.message}</p>
+                    <img className="myImg" src={item.url} alt="" />
                     <p className="time">{item.time}</p>
+
                   </div>
+                </>
+              ) : (
+                <>
+                  <div className="other">
+                    <img className="otherImg" src={item.url} alt="" />
+                    <div className="otherMessage">
+                      <p>{item.message}</p>
+                      <p className="time">{item.time}</p>
+                    </div>
 
-                </div>
-              </>
-            )}
+                  </div>
+                </>
+              )}
 
-          </div>
-        ))}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </Watermark>
 
-        <div ref={messagesEndRef} />
       </div>
+
+
       <div className="bottom">
         {/* <input type="text" placeholder="输入消息" ><img src={send} alt="" /></input> */}
         <img src={emoji} alt="" />
@@ -151,7 +159,9 @@ const HomeMiddle = ({ changeMiddle }) => {
           />
         </div>
       </div>
-    </div>
+
+    </div >
+
   );
 };
 

@@ -3,6 +3,8 @@ import HomeMiddle from "../compent/Home-middle";
 import HomeLeft from "../compent/Hoem-left";
 import { useState } from "react";
 import { useRef } from "react";
+import HomeRight from "../compent/Home-right";
+import { Watermark } from 'antd';
 const Home = () => {
   const [getTheNewChat, setGetTheNewChat] = useState(null);
   const [isRightOpen, setIsRightOpen] = useState(false); // 用状态来跟踪
@@ -42,7 +44,9 @@ const Home = () => {
       <div className="middle" ref={middleRef}>
         <HomeMiddle getTheNewChat={getTheNewChat} changeMiddle={changeMiddle} />
       </div>
-      <div className="right" ref={rightRef}></div>
+      <div className="right" ref={rightRef}>
+        <HomeRight getTheNewChat={getTheNewChat} />
+      </div>
     </div>
   );
 };

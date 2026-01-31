@@ -1,0 +1,100 @@
+.rightMessage {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.top {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.middle-img {
+    width: 100%;
+    height: 200px;
+    text-align: center;
+
+
+    img {
+
+        display: block;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
+
+    p {
+        margin-top: 20px;
+    }
+
+}
+
+.setting-per {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 10px 30px 10px;
+
+    border-bottom: 2px solid #e0e0e0;
+
+    .p1 {
+        font-size: 14px;
+
+    }
+
+    .notmessage {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+
+        img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .switch {
+            position: absolute;
+            right: 10px;
+        }
+    }
+
+    .createGroup {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+
+        img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .switch {
+            position: absolute;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+
+        }
+
+        .switch:active {
+            color: #95e484;
+
+        }
+    }
+}

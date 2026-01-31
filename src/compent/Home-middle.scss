@@ -1,11 +1,80 @@
 .title {
   width: 100%;
   height: 100%;
-  text-align: center;
-  line-height: 50px;
-  font-size: 20px;
-  font-weight: bold;
-  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #b4b6b7 0%, #e9ecef 50%, #b8c0c9 100%);
+
+  // 装饰圆圈
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.03);
+    animation: float 6s ease-in-out infinite;
+  }
+
+  &::before {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+  }
+
+  &::after {
+    width: 200px;
+    height: 200px;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: -3s;
+  }
+
+  p {
+    position: relative;
+    z-index: 1;
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    padding: 24px 48px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    &:active {
+      transform: translateY(-2px) scale(1.01);
+    }
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  33% {
+    transform: translate(30px, -30px) rotate(5deg);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) rotate(-5deg);
+  }
 }
 
 .middle-chat {
