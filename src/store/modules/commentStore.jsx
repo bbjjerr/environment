@@ -4,13 +4,36 @@ const commentStore = createSlice({
   name: "comment",
   // 初始状态
   initialState: {
-    list: [],
+    currentConversation: null, // 当前选中的会话
+    messages: [], // 当前会话的消息列表
+    list: [], // 保持向后兼容
   },
   // 修改状态的方法
   reducers: {
+    // 设置当前会话和消息
+    setCurrentChat(state, action) {
+      const { conversation, messages } = action.payload;
+      state.currentConversation = conversation;
+      state.messages = messages || [];
+      state.list = conversation; // 向后兼容
+      console.log(
+        "设置当前会话:",
+        conversation?.name || conversation?.participants?.[0]?.name,
+      );
+    },
+    // 添加新消息到当前会话
+    addMessage(state, action) {
+      state.messages.push(action.payload);
+    },
+    // 清空当前会话
+    clearChat(state) {
+      state.currentConversation = null;
+      state.messages = [];
+      state.list = [];
+    },
+    // 兼容旧的 addComment
     addComment(state, action) {
       state.list = action.payload;
-      console.log("添加了评论：", action.payload);
     },
     cleatComment(state) {
       state.list = [];
@@ -19,6 +42,12 @@ const commentStore = createSlice({
 });
 
 // 导出 action 函数，供组件调用
-export const { addComment, cleatComment } = commentStore.actions;
+export const {
+  setCurrentChat,
+  addMessage,
+  clearChat,
+  addComment,
+  cleatComment,
+} = commentStore.actions;
 // 导出 reducer，供创建 store 使用
 export default commentStore.reducer;

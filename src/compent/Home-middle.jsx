@@ -1,35 +1,54 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "./Home-middle.scss";
 import more from "../img/更多.png";
-import { useMemo, useRef, useEffect } from "react";
-
+import { useMemo, useRef, useEffect, useState } from "react";
 import send from "../img/_图片.png";
 import emoji from "../img/表情.png";
 import add from "../img/文件.png";
 import { Watermark } from "antd";
+import { sendMessage } from "../api/login";
+import { addMessage } from "../store/modules/commentStore";
 
 const HomeMiddle = ({ changeMiddle }) => {
-  const chatList = useSelector((state) => state.comment.list);
+  const currentConversation = useSelector(
+    (state) => state.comment.currentConversation,
+  );
+  const messages = useSelector((state) => state.comment.messages);
+  const dispatch = useDispatch();
   const messagesEndRef = useRef(null);
+  const [inputValue, setInputValue] = useState("");
 
+  // 处理消息列表
   const MessageShadow = useMemo(() => {
-    if (!chatList?.theContentOfTheChat) return [];
-    const newCount = chatList.theContentOfTheChat
-      .map((item, index) => ({
-        ...item,
-        id: `msg-${index}-${item.time}`, // 组合 key 更稳健
-      }))
-      .sort((a, b) => new Date(a.time) - new Date(b.time));
-    console.log(newCount);
-    return newCount;
-  }, [chatList]);
+    if (!messages || messages.length === 0) return [];
 
-  // 核心逻辑：监听消息数组，变化时滚动到底部
+    const userId = localStorage.getItem("userId");
+
+    return messages
+      .map((item, index) => {
+        const senderIdStr =
+          typeof item.senderId === "object"
+            ? item.senderId?._id?.toString()
+            : item.senderId?.toString();
+
+        return {
+          ...item,
+          id: item._id || `msg-${index}`,
+          message: item.body,
+          time: item.createdAt
+            ? new Date(item.createdAt).toLocaleTimeString()
+            : "",
+          url: item.sender?.avatarUrl || "https://i.pravatar.cc/150",
+          senderName: item.sender?.name || "Unknown",
+          isMine: senderIdStr === userId,
+        };
+      })
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  }, [messages]);
+
+  // 滚动到底部
   const scrollToBottom = () => {
-    //立刻滚动到底部
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
-
-    // messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -38,50 +57,78 @@ const HomeMiddle = ({ changeMiddle }) => {
 
   const inputRef = useRef(null);
 
-  const handleInput = () => {
+  const handleInput = (e) => {
+    setInputValue(e.target.value);
     const textarea = inputRef.current;
     if (!textarea) return;
 
-    // 1. 重置高度，确保在内容减少时高度能缩回
     textarea.style.height = "auto";
-
-    // 2. 获取内容的实际高度
     const scrollHeight = textarea.scrollHeight;
 
-    // 3. 设置高度逻辑
-    // 如果内容高度小于 50，保持 50；如果大于 100，固定在 100（溢出自动出滑轮）
     if (scrollHeight <= 50) {
       textarea.style.height = "50px";
       textarea.style.overflowY = "hidden";
     } else if (scrollHeight > 200) {
       textarea.style.height = "200px";
-      textarea.style.overflowY = "auto"; // 超过 100px 出现滑轮
+      textarea.style.overflowY = "auto";
     } else {
       textarea.style.height = `${scrollHeight}px`;
       textarea.style.overflowY = "hidden";
     }
-
-    // 4. 输入框高度变化时，保持聊天区域滚动到底部
     scrollToBottom();
   };
 
-  // 如果没有数据，显示占位内容
-  if (!chatList || chatList.length === 0) {
+  // 发送消息
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || !currentConversation) return;
+
+    try {
+      const res = await sendMessage(currentConversation._id, {
+        body: inputValue,
+      });
+      console.log("发送消息成功:", res);
+
+      // 添加到本地消息列表
+      dispatch(addMessage(res));
+
+      // 清空输入框
+      setInputValue("");
+      if (inputRef.current) {
+        inputRef.current.value = "";
+        inputRef.current.style.height = "50px";
+      }
+    } catch (e) {
+      console.log("发送消息失败:", e);
+    }
+  };
+
+  // 按 Enter 发送消息
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  // 获取聊天对象信息
+  const chatPartner = currentConversation?.participants?.[0] || {};
+  const chatName = currentConversation?.name || chatPartner.name || "未知用户";
+  const chatAvatar = chatPartner.avatarUrl || "https://i.pravatar.cc/150";
+
+  // 如果没有选中会话，显示占位内容
+  if (!currentConversation) {
     return (
-      // 设置文字提示，这里空荡荡的dang 表示“正在加载”
       <div className="title">
-        <p>dang... 请选择一个聊天对象</p>
+        <p>请选择一个聊天对象</p>
       </div>
     );
   }
 
-  //
-
   return (
     <div className="middle-chat">
       <div className="headerImg">
-        <img className="ImgSie" src={chatList.url} alt="" />
-        <p className="textMessage">{chatList.name}</p>
+        <img className="ImgSie" src={chatAvatar} alt="" />
+        <p className="textMessage">{chatName}</p>
         <img
           className="countMessage"
           onClick={changeMiddle}
@@ -97,18 +144,20 @@ const HomeMiddle = ({ changeMiddle }) => {
         className="watermark-container"
       >
         <div className="top2">
-          {MessageShadow.map((item) => (
-            <div key={item.id} className="message">
-              {item.sender == "Alex Chen" ? (
-                <>
+          {MessageShadow.length === 0 ? (
+            <div className="empty-messages">
+              <p>暂无消息，发送第一条消息开始聊天吧！</p>
+            </div>
+          ) : (
+            MessageShadow.map((item) => (
+              <div key={item.id} className="message">
+                {item.isMine ? (
                   <div className="my">
                     <p className="myMessage">{item.message}</p>
                     <img className="myImg" src={item.url} alt="" />
                     <p className="time">{item.time}</p>
                   </div>
-                </>
-              ) : (
-                <>
+                ) : (
                   <div className="other">
                     <img className="otherImg" src={item.url} alt="" />
                     <div className="otherMessage">
@@ -116,16 +165,15 @@ const HomeMiddle = ({ changeMiddle }) => {
                       <p className="time">{item.time}</p>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            ))
+          )}
           <div ref={messagesEndRef} />
         </div>
       </Watermark>
 
       <div className="bottom">
-        {/* <input type="text" placeholder="输入消息" ><img src={send} alt="" /></input> */}
         <img src={emoji} alt="" />
         <img src={add} alt="" />
         <img src={send} alt="" />
@@ -133,16 +181,31 @@ const HomeMiddle = ({ changeMiddle }) => {
           <textarea
             ref={inputRef}
             onInput={handleInput}
+            onKeyDown={handleKeyDown}
             placeholder="输入消息"
             className="sendInput"
             style={{
               minHeight: "50px",
               maxHeight: "500px",
-              resize: "none", // 禁止手动拉伸
-
-              transition: "height 0.1s ease", // 平滑过渡
+              resize: "none",
+              transition: "height 0.1s ease",
             }}
           />
+          <button
+            className="sendButton"
+            onClick={handleSendMessage}
+            style={{
+              padding: "8px 16px",
+              background: "#4f45e5",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginLeft: "10px",
+            }}
+          >
+            发送
+          </button>
         </div>
       </div>
     </div>

@@ -113,7 +113,7 @@ const createMessage = asyncHandler(async (req, res) => {
   // 返回完整消息
   await message.populate("senderId", "name avatarUrl");
 
-  res.status(201).json({
+  const messageData = {
     _id: message._id,
     conversationId: message.conversationId,
     senderId: message.senderId._id,
@@ -126,7 +126,19 @@ const createMessage = asyncHandler(async (req, res) => {
     richContent: message.richContent,
     status: message.status,
     createdAt: message.createdAt,
-  });
+  };
+
+  // 通过 Socket.io 广播给其他参与者
+  const io = req.app.get("io");
+  if (io) {
+    conversation.participants.forEach((participantId) => {
+      if (participantId.toString() !== req.userId.toString()) {
+        io.to(participantId.toString()).emit("newMessage", messageData);
+      }
+    });
+  }
+
+  res.status(201).json(messageData);
 });
 
 /**

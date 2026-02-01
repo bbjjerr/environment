@@ -6,7 +6,7 @@ import chat from "../img/chat.png";
 import more from "../img/3.1 设置.png";
 import exit from "../img/退出.png";
 import { useState, useEffect, useMemo } from "react";
-import { addComment, cleatComment } from "../store/modules/commentStore";
+import { setCurrentChat, addMessage } from "../store/modules/commentStore";
 import { useDispatch } from "react-redux";
 import {
   getCurrentUser,
@@ -14,7 +14,11 @@ import {
   getConversationList,
   searchUser,
   getConversationDetail,
+  getConversationMessages,
 } from "../api/login";
+import { connectSocket, onNewMessage, offNewMessage } from "../api/socket";
+import { SmileOutlined } from "@ant-design/icons";
+import { notification } from "antd";
 
 const HomeLeft = () => {
   const [Allpeople, setAllpeople] = useState([]); //初始化聊天信息
@@ -79,24 +83,75 @@ const HomeLeft = () => {
   };
 
   const [userInfo, setUserInfo] = useState({}); //后端链接获取用户信息，
+  const dispatch = useDispatch();
+
+  // 消息通知
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (message) => {
+    api.open({
+      message: `${message.sender?.name || "新消息"}`,
+      description: message.body,
+      icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+    });
+  };
+
   useEffect(() => {
     getCurrentUser().then((res) => {
       setUserInfo(res);
+      localStorage.setItem("userId", res._id);
+
+      // 连接 Socket
+      connectSocket(res._id);
+
+      // 监听新消息
+      onNewMessage((message) => {
+        console.log("收到新消息:", message);
+        openNotification(message);
+        dispatch(addMessage(message));
+        updateConversationList();
+      });
     });
+
+    return () => {
+      offNewMessage();
+    };
   }, []);
   //在这里获取用户的身份信息-end
-  const dispatch = useDispatch();
 
   const [messagePeople, setMessagePeople] = useState(Allpeople);
-  // 添加聊天
-  const handleChatClick = (item) => {
-    dispatch(cleatComment());
-    dispatch(addComment(item));
+
+  // 点击会话，加载历史消息
+  const handleChatClick = async (item) => {
+    console.log("点击会话:", item.name || item.participants[0]?.name);
+    try {
+      const res = await getConversationMessages(item._id, {
+        page: 1,
+        limit: 50,
+      });
+      console.log("获取消息:", res);
+
+      dispatch(
+        setCurrentChat({
+          conversation: item,
+          messages: res.data || [],
+        }),
+      );
+    } catch (e) {
+      console.log("获取消息失败:", e);
+      // 即使没有消息也设置当前会话
+      dispatch(
+        setCurrentChat({
+          conversation: item,
+          messages: [],
+        }),
+      );
+    }
   };
 
   console.log(setMessagePeople);
   return (
     <>
+      {contextHolder}
       {/* 搜索弹窗 - 根据 isSearchOpen 状态显示/隐藏 */}
       {isSearchOpen && (
         <div className="searchForPopUps">
