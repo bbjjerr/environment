@@ -7,6 +7,7 @@ const commentStore = createSlice({
     currentConversation: null, // 当前选中的会话
     messages: [], // 当前会话的消息列表
     list: [], // 保持向后兼容
+    conversationListVersion: 0, // 用于触发会话列表刷新
   },
   // 修改状态的方法
   reducers: {
@@ -31,6 +32,10 @@ const commentStore = createSlice({
       state.messages = [];
       state.list = [];
     },
+    // 触发会话列表刷新
+    triggerListRefresh(state) {
+      state.conversationListVersion += 1; //
+    },
     // 兼容旧的 addComment
     addComment(state, action) {
       state.list = action.payload;
@@ -46,6 +51,7 @@ export const {
   setCurrentChat,
   addMessage,
   clearChat,
+  triggerListRefresh,
   addComment,
   cleatComment,
 } = commentStore.actions;

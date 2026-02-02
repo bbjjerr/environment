@@ -1,105 +1,216 @@
+// 右侧详情面板样式
 .rightMessage {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 10px;
-  background-color: #fff;
+  padding: 20px;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  overflow-y: auto;
 }
 
+// 顶部标题
 .top {
   width: 100%;
   height: 50px;
   text-align: center;
   line-height: 50px;
-  font-size: 20px;
-  font-weight: bold;
-  border-bottom: 2px solid #e0e0e0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 20px;
+
+  p {
+    margin: 0;
+  }
 }
 
+// 用户头像和信息区域
 .middle-img {
   width: 100%;
-  height: 200px;
+  padding: 20px 0;
   text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
 
   img {
     display: block;
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     margin: 0 auto;
-    margin-top: 30px;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    object-fit: cover;
   }
 
   p {
-    margin-top: 20px;
+    margin: 0;
+    padding: 0;
+
+    &:nth-child(2) {
+      margin-top: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    &:nth-child(3) {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #888;
+    }
   }
 }
 
-.setting-per {
+// 通用设置区块样式
+.setting,
+.setting-per,
+.settingDangerous {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 10px 30px 10px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
 
-  border-bottom: 2px solid #e0e0e0;
-
-  .p1 {
+  > p:first-child {
     font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f0f0;
   }
+}
 
-  .notmessage {
-    margin-top: 20px;
+// 设置项通用样式
+.setting-per {
+  .notmessage,
+  .createGroup {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 8px;
     position: relative;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
 
     img {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #333;
     }
 
     .switch {
       position: absolute;
-      right: 10px;
+      right: 12px;
     }
   }
 
   .createGroup {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-
-    img {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-    }
-
     .switch {
-      position: absolute;
-      right: 20px;
       font-size: 20px;
       cursor: pointer;
-    }
+      color: #4f45e5;
+      transition: all 0.2s ease;
 
-    .switch:active {
-      color: #95e484;
+      &:hover {
+        color: #6c63ff;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        color: #3d35b5;
+        transform: scale(0.95);
+      }
     }
   }
 }
-.settingDangerous {
-  width: 100%;
-  .dangerousUse {
-    margin-top: 20px;
+
+// 设置操作区
+.setting {
+  .settingUse {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    color: red;
-    margin-left: 30px;
+    gap: 4px;
+
+    .settingItem {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      font-size: 14px;
+      color: #333;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 12px;
+
+      .settingIcon {
+        font-size: 18px;
+        color: #4f45e5;
+      }
+
+      &:hover {
+        background-color: rgba(1, 1, 11, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    p {
+      margin: 0;
+      padding: 12px;
+      font-size: 14px;
+      color: #4f45e5;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba(79, 69, 229, 0.08);
+      }
+    }
+  }
+}
+
+// 危险操作区域
+.settingDangerous {
+  > p:first-child {
+    color: #ff4d4f;
+  }
+
+  .dangerousUse {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    p {
+      margin: 0;
+      padding: 12px;
+      font-size: 14px;
+      color: #ff4d4f;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: rgba(255, 77, 79, 0.08);
+      }
+    }
   }
 }

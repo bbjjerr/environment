@@ -4,18 +4,27 @@ import { useSelector } from "react-redux";
 import notmessage from "../img/铃铛.png";
 import createGroup from "../img/添加人员.png";
 import { Switch } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  FileOutlined,
+  PictureOutlined,
+} from "@ant-design/icons";
 const HomeRight = () => {
-  const chatList = useSelector((state) => state.comment.list);
+  const chatList = useSelector((state) => state.comment.currentConversation);
+
   const newPerson = useMemo(() => {
-    if (!chatList) return [];
-    return chatList;
+    // 如果 chatList 不存在，或者 participants 不存在/不是数组，返回空
+    return chatList?.participants || [];
   }, [chatList]);
 
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
   };
 
+  // 这里的判断改为：如果数组长度为 0，说明还没拿到人，显示加载或提示
+  if (newPerson.length === 0) {
+    return <div className="rightMessage">请选择一个会话...</div>;
+  }
   return (
     <>
       <div className="rightMessage">
@@ -23,8 +32,9 @@ const HomeRight = () => {
           <p>详细信息</p>
         </div>
         <div className="middle-img">
-          <img src={newPerson.url} alt="" />
-          <p>{newPerson.name}</p>
+          <img src={newPerson?.[0]?.avatarUrl} />
+          <p>{newPerson?.[0]?.name}</p>
+          <p>{newPerson?.[0]?.email}</p>
         </div>
         <div className="setting-per">
           <p className="p1">设置</p>
@@ -38,6 +48,19 @@ const HomeRight = () => {
             <p>创建群组</p>
 
             <PlusCircleOutlined className="switch" />
+          </div>
+        </div>
+        <div className="setting">
+          <p>媒体文件</p>
+          <div className="settingUse">
+            <div className="settingItem">
+              <FileOutlined className="settingIcon" />
+              <span>查看文件</span>
+            </div>
+            <div className="settingItem">
+              <PictureOutlined className="settingIcon" />
+              <span>查看图片</span>
+            </div>
           </div>
         </div>
         <div className="settingDangerous">

@@ -22,6 +22,10 @@ const listConversations = asyncHandler(async (req, res) => {
     .populate({
       path: "lastMessage",
       select: "body senderId createdAt",
+      populate: {
+        path: "senderId",
+        select: "name avatarUrl",
+      },
     })
     .sort({ updatedAt: -1 })
     .skip(skip)

@@ -175,7 +175,11 @@
       "lastMessage": {
         "_id": "msg_001",
         "body": "设计稿看起来很棒！🔥",
-        "senderId": "user_001",
+        "senderId": {
+          "_id": "user_001",
+          "name": "Sarah Wilson",
+          "avatarUrl": "..."
+        },
         "createdAt": "2026-01-29T10:30:00.000Z"
       },
       "unreadCount": 2,

@@ -17,7 +17,7 @@ export const getCurrentUser = () => {
 export const searchUser = (params) => {
   return http.get("/users", { params });
 };
-//获取会话列表
+//获取会话列表,这里获得的是会话列表
 export const getConversationList = (params) => {
   return http.get("/conversations", { params });
 };
@@ -40,4 +40,15 @@ export const getConversationMessages = (conversationId, params) => {
 // 发送消息
 export const sendMessage = (conversationId, data) => {
   return http.post(`/messages/conversation/${conversationId}`, data);
+};
+
+/**
+ * 清空指定会话的未读消息数
+ * @param {string} conversationId - 会话的唯一 ID
+ */
+export const resetUnread = (conversationId) => {
+  if (!conversationId) return Promise.reject("缺少会话ID");
+
+  // POST 请求，通常不需要 Body，ID 已经在 URL 中
+  return http.post(`/conversations/${conversationId}/unread/reset`);
 };

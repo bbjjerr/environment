@@ -7,7 +7,7 @@ import emoji from "../img/表情.png";
 import add from "../img/文件.png";
 import { Watermark } from "antd";
 import { sendMessage } from "../api/login";
-import { addMessage } from "../store/modules/commentStore";
+import { addMessage, triggerListRefresh } from "../store/modules/commentStore";
 
 const HomeMiddle = ({ changeMiddle }) => {
   const currentConversation = useSelector(
@@ -91,6 +91,9 @@ const HomeMiddle = ({ changeMiddle }) => {
       // 添加到本地消息列表
       dispatch(addMessage(res));
 
+      // 触发会话列表刷新，让左侧显示最新消息
+      dispatch(triggerListRefresh());
+
       // 清空输入框
       setInputValue("");
       if (inputRef.current) {
@@ -139,8 +142,8 @@ const HomeMiddle = ({ changeMiddle }) => {
       </div>
 
       <Watermark
-        content={["公司内部聊天，禁止外传"]}
-        gap={[50, 50]}
+        content={["公司的内部系统禁止传播"]}
+        gap={[10, 10]}
         className="watermark-container"
       >
         <div className="top2">

@@ -7,13 +7,14 @@ import more from "../img/3.1 设置.png";
 import exit from "../img/退出.png";
 import { useState, useEffect, useMemo } from "react";
 import { setCurrentChat, addMessage } from "../store/modules/commentStore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentUser,
   createConversation,
   getConversationList,
   searchUser,
   getConversationDetail,
+  resetUnread,
   getConversationMessages,
 } from "../api/login";
 import { connectSocket, onNewMessage, offNewMessage } from "../api/socket";
@@ -21,14 +22,16 @@ import { SmileOutlined } from "@ant-design/icons";
 import { notification } from "antd";
 
 const HomeLeft = () => {
-  const [Allpeople, setAllpeople] = useState([]); //初始化聊天信息
+  //利用Allpeople，来存储会话列表，存储的是左侧的会话列表
+  const [Allpeople, setAllpeople] = useState([]);
+
   useEffect(() => {
     getConversationList().then((res) => {
-      // 之前是 setAllpeople(res)，现在改为取其中的 data 数组
       setAllpeople(res.data || []);
-      console.log("获取到的会话数组:", res.data);
+      console.log("开始查找缓存的聊天数据", res.data);
     });
   }, []);
+
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const handleSearch = async () => {
@@ -53,7 +56,6 @@ const HomeLeft = () => {
   }, [searchResult]);
   // 使用 useState 控制弹窗显示/隐藏
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   const closeSearch = () => {
     setIsSearchOpen(!isSearchOpen);
   };
@@ -75,7 +77,6 @@ const HomeLeft = () => {
   const updateConversationList = async () => {
     try {
       const res = await getConversationList();
-      // 同样，这里也必须取 res.data
       setAllpeople(res.data || []);
     } catch (e) {
       console.log("更新列表失败:", e);
@@ -84,6 +85,18 @@ const HomeLeft = () => {
 
   const [userInfo, setUserInfo] = useState({}); //后端链接获取用户信息，
   const dispatch = useDispatch();
+
+  // 监听会话列表刷新信号（当自己发送消息后触发）
+  const conversationListVersion = useSelector(
+    (state) => state.comment.conversationListVersion,
+  );
+
+  // 当刷新版本变化时，重新获取会话列表
+  useEffect(() => {
+    if (conversationListVersion > 0) {
+      updateConversationList();
+    }
+  }, [conversationListVersion]);
 
   // 消息通知
   const [api, contextHolder] = notification.useNotification();
@@ -98,6 +111,7 @@ const HomeLeft = () => {
   useEffect(() => {
     getCurrentUser().then((res) => {
       setUserInfo(res);
+
       localStorage.setItem("userId", res._id);
 
       // 连接 Socket
@@ -120,7 +134,7 @@ const HomeLeft = () => {
 
   const [messagePeople, setMessagePeople] = useState(Allpeople);
 
-  // 点击会话，加载历史消息
+  // 点击会话，加载历史消息------------------------------------------------------------------------
   const handleChatClick = async (item) => {
     console.log("点击会话:", item.name || item.participants[0]?.name);
     try {
@@ -129,6 +143,13 @@ const HomeLeft = () => {
         limit: 50,
       });
       console.log("获取消息:", res);
+      resetUnread(item._id);
+      // 立即更新本地的 unreadCount 为 0，这样 UI 会立刻消失
+      setAllpeople((prev) =>
+        prev.map((conv) =>
+          conv._id === item._id ? { ...conv, unreadCount: 0 } : conv,
+        ),
+      );
 
       dispatch(
         setCurrentChat({
@@ -136,6 +157,7 @@ const HomeLeft = () => {
           messages: res.data || [],
         }),
       );
+      return res.data || [];
     } catch (e) {
       console.log("获取消息失败:", e);
       // 即使没有消息也设置当前会话
@@ -148,7 +170,6 @@ const HomeLeft = () => {
     }
   };
 
-  console.log(setMessagePeople);
   return (
     <>
       {contextHolder}
@@ -240,32 +261,55 @@ const HomeLeft = () => {
           <span className="hint-right">+</span>
         </div>
         <div className="chatinformation">
-          {Allpeople.map((item) => (
-            <div
-              className="informationDetails"
-              key={item._id} // 使用后端返回的 _id
-              onClick={() => handleChatClick(item)}
-            >
-              {/* 这里的头像逻辑：如果是私聊，通常显示对方的头像 */}
-              <img
-                src={item.participants[0]?.avatarUrl || "default_vatar.png"}
-                alt=""
-              />
-              <p>
-                {/* 如果是私聊且没有名字，显示对方名字 */}
-                {item.name || item.participants[0]?.name}
-                <span>
-                  {/* 使用后端返回的 lastMessage 字段 */}
-                  {item.lastMessage ? item.lastMessage.body : "暂无消息"}
-                </span>
-              </p>
-              <p className="time">
-                {item.updatedAt
-                  ? new Date(item.updatedAt).toLocaleTimeString()
-                  : ""}
-              </p>
-            </div>
-          ))}
+          {Allpeople.map((item) => {
+            const otherParticipant = item.participants[0];
+            const isOnline = otherParticipant?.status === "online";
+            // 截断消息长度（超过20个字符就截断）
+            console.log("item", item);
+            const lastMessageText =
+              item.lastMessage?.senderId === userInfo._id
+                ? `我：${item.lastMessage?.body}`
+                : `他：${item.lastMessage?.body}`;
+            const truncatedMessage =
+              lastMessageText.length > 20
+                ? lastMessageText.substring(0, 20) + "..."
+                : lastMessageText;
+            const unreadCount = item.unreadCount;
+            console.log("unreadCount", unreadCount);
+
+            return (
+              <div
+                className="informationDetails"
+                key={item._id}
+                onClick={() => handleChatClick(item)} //点击会话，加载历史消息
+              >
+                {/* 头像容器，带在线状态指示器 */}
+                <div className="avatarWrapper">
+                  <img
+                    src={otherParticipant?.avatarUrl || "default_vatar.png"}
+                    alt=""
+                  />
+                  {unreadCount > 0 && (
+                    <span className="unreadCount">{unreadCount}</span>
+                  )}
+                  <span
+                    className={`onlineIndicator ${isOnline ? "online" : "offline"}`}
+                  ></span>
+                </div>
+                <div className="messageContent">
+                  <p className="userName">
+                    {item.name || otherParticipant?.name}
+                  </p>
+                  <p className="lastMessage">{truncatedMessage}</p>
+                </div>
+                <p className="time">
+                  {item.updatedAt
+                    ? new Date(item.updatedAt).toLocaleTimeString()
+                    : ""}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         <div className="endExit">
