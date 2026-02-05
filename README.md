@@ -1,4 +1,4 @@
-# getTheReact 后端服务
+# 使用完成服务
 
 Node.js + Express + MongoDB 的聊天应用 API 服务。
 
@@ -148,10 +148,7 @@ Authorization: Bearer <your_token>
 
 ## 技术栈
 
-- **Runtime**: Node.js
-- **Framework**: Express 5
-- **Database**: MongoDB + Mongoose
-- **Authentication**: JWT (jsonwebtoken)
 - **Password**: bcryptjs
 - **File Upload**: multer
 - **Validation**: express-validator
+
