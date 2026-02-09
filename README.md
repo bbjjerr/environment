@@ -1,14 +1,14 @@
 # 使用完成服务
 
 Node.js + Express + MongoDB 的聊天应用 API 服务。
+前端是react+redux+websocket+ajax实现的通信
+利用overcloud进行域名的转发，完成邮箱的验证。
 
 ## 功能特性
 
 - ✅ 用户认证（注册、登录、JWT Token）
 - ✅ 用户管理（个人信息、在线状态、搜索）
 - ✅ 会话管理（创建、列表、置顶、未读计数）
-- ✅ 消息功能（发送、编辑、删除、表情反应）
-- ✅ 文件上传（图片、文档）
 - ✅ 通知系统
 
 ## 快速开始
@@ -47,9 +47,6 @@ npm run seed
 
 这将创建测试用户和示例对话：
 
-- alex@example.com / 123456
-- sarah@example.com / 123456
-- michael@example.com / 123456
 
 ### 5. 启动服务
 
@@ -146,9 +143,4 @@ curl -X POST http://localhost:4000/api/v1/auth/login \
 Authorization: Bearer <your_token>
 ```
 
-## 技术栈
-
-- **Password**: bcryptjs
-- **File Upload**: multer
-- **Validation**: express-validator
 
